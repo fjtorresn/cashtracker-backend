@@ -11,7 +11,4 @@ export const db = new Sequelize(process.env.DATABASE_URL, {
             required: false
         }
     },
-    define: {
-        timestamps: false,
-    }
 })
