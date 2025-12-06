@@ -2,45 +2,35 @@ import { Router } from "express";
 import { body, param } from "express-validator";
 import { BudgetController } from "../controllers/BudgetController";
 import { handleInputErrors } from "../middlewares/validation";
-import { validateBudgetId } from "../middlewares/budget";
+import { validateBudgetExists, validateBudgetId, validateBudgetInputs } from "../middlewares/budget";
 
 const router = Router();
+
+router.param('budgetID', validateBudgetId);
+router.param('budgetID', validateBudgetExists);
 
 router.get('/', BudgetController.getAll);
 
 router.post('/',
-    body('name')
-        .notEmpty()
-        .withMessage('El nombre no puede estar vacío'),
-    body('amount')
-        .notEmpty().withMessage('El monto es obligatorio')
-        .isNumeric().withMessage('El monto debe ser un número decimal')
-        .custom(value => value > 0).withMessage('El monto debe ser un número positivo'),
+    validateBudgetInputs,
     handleInputErrors,
     BudgetController.create
 );
 
-router.get('/:id',
-    validateBudgetId,
+router.get('/:budgetID',
     handleInputErrors,
     BudgetController.getBudgetById
 );
 
-router.put('/:id',
-    validateBudgetId,
-    body('name')
-        .notEmpty()
-        .withMessage('El nombre no puede estar vacío'),
-    body('amount')
-        .notEmpty().withMessage('El monto es obligatorio')
-        .isNumeric().withMessage('El monto debe ser un número decimal')
-        .custom(value => value > 0).withMessage('El monto debe ser un número positivo'),
+router.put('/:budgetID',
+    validateBudgetInputs,
     handleInputErrors,
-    BudgetController.updateBudgetById);
+    BudgetController.updateBudgetById
+);
 
-router.delete('/:id',
-    validateBudgetId,
+router.delete('/:budgetID',
     handleInputErrors,
-    BudgetController.deleteBudgetById);
+    BudgetController.deleteBudgetById
+);
 
 export default router;

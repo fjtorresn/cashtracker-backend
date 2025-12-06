@@ -20,9 +20,7 @@ export class BudgetController {
 
     static create = async (req: Request, res: Response) => {
         try {
-            // Crear budget
             const budget = new Budget(req.body);
-            // Guardar en la base de datos
             await budget.save();
             res.status(201).json(budget);
         } catch (error) {
@@ -31,44 +29,16 @@ export class BudgetController {
     }
 
     static getBudgetById = async (req: Request, res: Response) => {
-        try {
-            // Buscar filtrando por el ID
-            const budget = await Budget.findByPk(req.params.id);
-            if (!budget) {
-                const error = new Error("Budget not found");
-                return res.status(404).json({ error: error.message });
-            }
-            res.status(200).json(budget);
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
+        res.status(200).json(req.budget);
     }
 
     static updateBudgetById = async (req: Request, res: Response) => {
-        try {
-            const budget = await Budget.findByPk(req.params.id);
-            if (!budget) {
-                const error = new Error("Budget not found");
-                return res.status(404).json({ error: error.message });
-            }
-            await budget.update(req.body);
-            res.status(200).json("Budget updated successfully");
-        } catch (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
+        await req.budget.update(req.body);
+        res.status(200).json("Budget updated successfully");
     }
 
     static deleteBudgetById = async (req: Request, res: Response) => {
-        try {
-            const budget = await Budget.findByPk(req.params.id);
-            if (!budget) {
-                const error = new Error("Budget not found");
-                return res.status(404).json({ error: error.message });
-            }
-            await budget.destroy();
-            res.status(200).json("Budget deleted successfully");
-        } catch (error) {
-
-        }
+        await req.budget.destroy();
+        res.status(200).json("Budget deleted successfully");
     }
 }
