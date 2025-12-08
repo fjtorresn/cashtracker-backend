@@ -3,7 +3,8 @@ import User from '../models/User';
 import { checkPassword, hashPassword } from '../utils/auth';
 import { generateToken } from '../utils/token';
 import { AuthEmail } from '../emails/AuthEmail';
-import { generateJWT } from '../utils/jwt';
+import { generateJWT, validateJWT } from '../utils/jwt';
+
 
 export class AuthController {
     static createAccount = async (req: Request, res: Response) => {
@@ -104,5 +105,10 @@ export class AuthController {
         user.password = await hashPassword(password);
         user.token = null;
         await user.save();
+        res.status(200).json("Contraseña actualizada");
+    }
+
+    static user = async (req: Request, res: Response) => {
+        res.json(req.user)
     }
 }
