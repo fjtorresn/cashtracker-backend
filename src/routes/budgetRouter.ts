@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { body, param } from "express-validator";
 import { BudgetController } from "../controllers/BudgetController";
 import { handleInputErrors } from "../middlewares/validation";
 import { validateBudgetExists, validateBudgetId, validateBudgetInputs } from "../middlewares/budget";
