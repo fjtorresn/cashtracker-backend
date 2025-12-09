@@ -100,7 +100,7 @@ export class AuthController {
         const { password } = req.body;
         const user = await User.findOne({ where: { token } })
         if (!user) {
-            res.status(404).json({ error: "Token inválido" });
+            return res.status(404).json({ error: "Token inválido" });
         }
         user.password = await hashPassword(password);
         user.token = null;
@@ -110,5 +110,18 @@ export class AuthController {
 
     static user = async (req: Request, res: Response) => {
         res.json(req.user)
+    }
+
+    static updatePassword = async (req: Request, res: Response) => {
+        const { current_password, new_password } = req.body
+        const { id } = req.user;
+        const user = await User.findByPk(id);
+        const isPasswordCorrect = await checkPassword(current_password, user.password);
+        if (isPasswordCorrect) {
+            return res.status(401).json({ error: 'Constraseña actual incorrecta' })
+        }
+        user.password = await hashPassword(new_password);
+        await user.save();
+        return res.json('Contraseña actualizada correctamente');
     }
 }
