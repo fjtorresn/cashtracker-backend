@@ -78,5 +78,11 @@ router.post('/update-password',
     AuthController.updatePassword
 );
 
+router.post('/check-password',
+    authenticate,
+    body('password')
+        .notEmpty().withMessage('La constraseña actual no puede estar vacía'),
+    AuthController.checkPassword
+);
 
 export default router;

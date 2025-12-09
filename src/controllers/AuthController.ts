@@ -124,4 +124,14 @@ export class AuthController {
         await user.save();
         return res.json('Contraseña actualizada correctamente');
     }
+
+    static checkPassword = async (req: Request, res: Response) => {
+        const { id } = req.user;
+        const user = await User.findByPk(id);
+        const isPasswordCorrect = await checkPassword(req.body.password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ error: 'Contraseña incorrecta' });
+        }
+        return res.json('Contraseña correcta');
+    }
 }
