@@ -49,3 +49,10 @@ export const validateBudgetInputs = async (req: Request, res: Response, next: Ne
         .run(req);
     next();
 }
+
+export const hasAccess = (req: Request, res: Response, next: NextFunction) => {
+    if (req.user.id !== req.budget.userId) {
+        return res.status(401).json({ error: 'Usuario no autorizado' });
+    }
+    next();
+}
