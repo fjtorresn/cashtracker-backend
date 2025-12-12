@@ -27,7 +27,7 @@ export const validateBudgetExists = async (req: Request, res: Response, next: Ne
     try {
         const budget = await Budget.findByPk(req.params.budgetID);
         if (!budget) {
-            const error = new Error("Budget not found");
+            const error = new Error('Presupuesto no encontrado');
             return res.status(404).json({ error: error.message });
         }
         req.budget = budget;
