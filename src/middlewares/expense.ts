@@ -40,7 +40,7 @@ export const validateExpenseExists = async (req: Request, res: Response, next: N
     try {
         const expense = await Expense.findByPk(req.params.expenseId);
         if (!expense) {
-            const error = new Error("Expense not found");
+            const error = new Error('Gasto no encontrado');
             return res.status(404).json({ error: error.message });
         }
         req.expense = expense;

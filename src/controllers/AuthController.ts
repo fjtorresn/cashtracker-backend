@@ -14,7 +14,7 @@ export class AuthController {
             return res.status(409).json({ message: 'El correo electrónico ya está en uso' });
         }
         try {
-            const user = new User(req.body);
+            const user = await User.create(req.body);
             user.password = await hashPassword(password);
             user.token = generateToken();
             await user.save();
@@ -50,17 +50,17 @@ export class AuthController {
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) {
-                return res.status(404).json("El usuario no ha sido encontrado");
+                return res.status(404).json('El usuario no ha sido encontrado');
+            }
+            if (!user.confirmed) {
+                return res.status(403).json("La cuenta debe ser confirmada")
             }
             const isPasswordCorrect = await checkPassword(password, user.password);
             if (!isPasswordCorrect) {
                 return res.status(401).json("La contraseña es incorrecta");
             }
-            if (!user.confirmed) {
-                return res.status(403).json("La cuenta debe ser confirmada")
-            }
             const token = generateJWT(user.id);
-            return res.status(200).json({ token });
+            return res.status(200).json(token);
         } catch (error) {
             res.status(500).json({ message: 'Error al crear la cuenta' + error });
         }

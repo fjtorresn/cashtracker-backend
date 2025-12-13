@@ -6,7 +6,7 @@ import { expenses } from "../../mocks/expense";
 
 jest.mock('../../../models/Expense.ts', () => ({
     create: jest.fn()
-}))
+}));
 
 describe('ExpenseController.create', () => {
     it('Should create an expense and return 200', async () => {
